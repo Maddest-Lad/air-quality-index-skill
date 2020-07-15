@@ -1,4 +1,7 @@
-from mycroft import MycroftSkill, intent_file_handler
+from mycroft import MycroftSkill, intent_file_handler, api
+
+print(api.GeolocationApi())
+print(type(api.GeolocationApi()))
 
 
 class AirQualityIndex(MycroftSkill):
@@ -12,4 +15,3 @@ class AirQualityIndex(MycroftSkill):
 
 def create_skill():
     return AirQualityIndex()
-

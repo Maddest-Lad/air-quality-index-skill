@@ -37,6 +37,8 @@ class AirQualityIndex(MycroftSkill):
                 particulates = query[1]["Category"]["Name"]
                 self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))
             else:
+                self.log.debug(type(query))
+                self.log.debug(query)
                 self.speak_dialog("data could not be found")
 
     # Returns dict of data from the AirNow Api

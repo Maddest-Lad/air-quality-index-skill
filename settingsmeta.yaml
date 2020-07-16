@@ -1,10 +1,10 @@
 
 skillMetadata:
   sections:
-    - name: Options << Name of section
+    - name: AirGov Api Key. Note Only Valid In US, Request Key At (https://docs.airnowapi.org/account/request/)
       fields:
         - name: api_key
           type: text
-          label: AirGov API Key. Note Only Valid In US, Request Key At (https://docs.airnowapi.org/account/request/)
+          label: Api Key
           value: ""
           placeholder: "########-####-####-####-############"

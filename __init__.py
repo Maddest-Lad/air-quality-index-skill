@@ -21,18 +21,22 @@ class AirQualityIndex(MycroftSkill):
         self.api_key = self.settings.get('api_key')
 
         loc = self.location
-        self.lat = loc['lat']
-        self.lon = loc['lon']
+
+        self.lat = 48.3
+        self.lon = -122.4
 
     @intent_handler('index.quality.air.intent')
     def handle_index_quality_air(self, message):
-        query = self.get_air_quality()
-        if query[0] is not None:
-            ozone = query[0]["Category"]["Name"]
-            particulates = query[1]["Category"]["Name"]
-            self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))
+        if self.api_key is None:
+            self.speak_dialog("API Key Not Set")
         else:
-            self.speak_dialog("data could not be found")
+            query = self.get_air_quality()
+            if query[0] is not None:
+                ozone = query[0]["Category"]["Name"]
+                particulates = query[1]["Category"]["Name"]
+                self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))
+            else:
+                self.speak_dialog("data could not be found")
 
     # Returns dict of data from the AirNow Api
     # Reuses Previous Data If Time Since Last Use Is Less Than 30 Min

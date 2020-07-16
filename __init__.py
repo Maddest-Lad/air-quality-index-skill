@@ -32,14 +32,11 @@ class AirQualityIndex(MycroftSkill):
             self.speak_dialog("API Key Not Set")
         else:
             query = self.get_air_quality()
-            if query is list:
-                ozone = query[0]["Category"]["Name"]
-                particulates = query[1]["Category"]["Name"]
-                self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))
-            else:
-                self.log.debug(type(query))
-                self.log.debug(query)
-                self.speak_dialog("data could not be found")
+
+            ozone = query[0]["Category"]["Name"]
+            particulates = query[1]["Category"]["Name"]
+            self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))
+
 
     def get_air_quality(self):
         PARAMS = {"latitude": self.lat,

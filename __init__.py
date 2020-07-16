@@ -18,7 +18,7 @@ URL = "http://www.airnowapi.org/aq/forecast/latLong/?format=application/json"
 class AirQualityIndex(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
-        self.api_key = self.settings.get('show_time')
+        self.api_key = self.settings.get('api_key')
         self.lat = 0.0
         self.lon = 0.0
 

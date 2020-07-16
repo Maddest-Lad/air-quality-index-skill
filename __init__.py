@@ -27,11 +27,16 @@ class AirQualityIndex(MycroftSkill):
 
     @intent_handler('index.quality.air.intent')
     def handle_index_quality_air(self, message):
+        loc = self.location
+        self.log.error(loc)
+        self.log.error(type(loc))
+        self.log.error(json.load(loc))
+
         if self.api_key is None:
             self.speak_dialog("API Key Not Set")
         else:
             query = self.get_air_quality()
-            if query[0] is not None:
+            if query is list:
                 ozone = query[0]["Category"]["Name"]
                 particulates = query[1]["Category"]["Name"]
                 self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))

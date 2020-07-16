@@ -44,10 +44,9 @@ class AirQualityIndex(MycroftSkill):
                   "distance": 25,
                   "API_KEY": self.api_key}
 
-        response = requests.get(url=URL, params=PARAMS, timeout=3)
-
         try:
-            response.raise_for_status()
+            response = requests.get(url=URL, params=PARAMS, timeout=3)
+            response.raise_for_status()  # Raises and exception if anything seems wrong with response
             return response.json()
         except Exception as error:
             self.log.debut(error)

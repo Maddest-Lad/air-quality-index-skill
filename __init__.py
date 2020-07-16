@@ -62,16 +62,16 @@ class AirQualityIndex(MycroftSkill):
                   "API_KEY": self.api_key}
 
         try:
+            self.log.debug(URL, PARAMS)
             response = requests.get(url=URL, params=PARAMS, timeout=3)
             response.raise_for_status()  # Raises HTTP Error If Something Went Wrong
 
         except requests.HTTPError as http_err:
             self.log.exception(f"HTTP error occurred: {http_err}")
-            return None
+
 
         except Exception as err:
             self.log.exception(f"Other error occurred: {err}")
-            return None
 
         else:
             try:

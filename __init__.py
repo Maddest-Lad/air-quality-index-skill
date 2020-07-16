@@ -41,50 +41,60 @@ class AirQualityIndex(MycroftSkill):
                 self.log.debug(query)
                 self.speak_dialog("data could not be found")
 
-    # Returns dict of data from the AirNow Api
-    # Reuses Previous Data If Time Since Last Use Is Less Than 30 Min
     def get_air_quality(self):
-        # If Most Recent Usage Was Within 30 Minutes, Use That Data
-        try:
-            minutes = int(time.strftime('%M', time.localtime(os.path.getmtime("data.json"))))
-            if minutes < 60:
-                with open("data.json") as file:
-                    return json.load(file)
-
-        # Perhaps There's No File Yet, Maybe It's Not A Valid Json Either Way, Get New Data
-        except Exception as err:
-            self.log.exception(f"Error Occurred: {err}")
-
         PARAMS = {"latitude": self.lat,
                   "longitude": self.lon,
                   "date": datetime.datetime.today().strftime('%Y-%m-%d'),  # Today
                   "distance": 25,
                   "API_KEY": self.api_key}
 
-        try:
-            self.log.debug(URL, PARAMS)
-            response = requests.get(url=URL, params=PARAMS, timeout=3)
-            response.raise_for_status()  # Raises HTTP Error If Something Went Wrong
-
-        except requests.HTTPError as http_err:
-            self.log.exception(f"HTTP error occurred: {http_err}")
+        return requests.get(url=URL, params=PARAMS, timeout=3).json()
 
 
-        except Exception as err:
-            self.log.exception(f"Other error occurred: {err}")
-
-        else:
-            try:
-                # Try To Save File To Reduce Potential API Calls
-                with open("data.json", "w") as file:
-                    file.write(json.dumps(response.json()))
-
-            except Exception as err:
-                self.log.exception(f"JSON write error occurred: {err}")
-                pass
-
-            # Returns The Dictionary
-            return response.json()
+    # Returns dict of data from the AirNow Api
+    # Reuses Previous Data If Time Since Last Use Is Less Than 30 Min
+    # def get_air_quality(self):
+    #     # If Most Recent Usage Was Within 30 Minutes, Use That Data
+    #     try:
+    #         minutes = int(time.strftime('%M', time.localtime(os.path.getmtime("data.json"))))
+    #         if minutes < 60:
+    #             with open("data.json") as file:
+    #                 return json.load(file)
+    #
+    #     # Perhaps There's No File Yet, Maybe It's Not A Valid Json Either Way, Get New Data
+    #     except Exception as err:
+    #         self.log.exception(f"Error Occurred: {err}")
+    #
+    #     PARAMS = {"latitude": self.lat,
+    #               "longitude": self.lon,
+    #               "date": datetime.datetime.today().strftime('%Y-%m-%d'),  # Today
+    #               "distance": 25,
+    #               "API_KEY": self.api_key}
+    #
+    #     try:
+    #         self.log.debug(URL, PARAMS)
+    #         response = requests.get(url=URL, params=PARAMS, timeout=3)
+    #         response.raise_for_status()  # Raises HTTP Error If Something Went Wrong
+    #
+    #     except requests.HTTPError as http_err:
+    #         self.log.exception(f"HTTP error occurred: {http_err}")
+    #
+    #
+    #     except Exception as err:
+    #         self.log.exception(f"Other error occurred: {err}")
+    #
+    #     else:
+    #         try:
+    #             # Try To Save File To Reduce Potential API Calls
+    #             with open("data.json", "w") as file:
+    #                 file.write(json.dumps(response.json()))
+    #
+    #         except Exception as err:
+    #             self.log.exception(f"JSON write error occurred: {err}")
+    #             pass
+    #
+    #         # Returns The Dictionary
+    #         return response.json()
 
     def stop(self):
         pass

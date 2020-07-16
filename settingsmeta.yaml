@@ -6,5 +6,5 @@ skillMetadata:
         - name: api_key
           type: text
           label: Api Key
-          value: ""
+          value: None
           placeholder: "########-####-####-####-############"

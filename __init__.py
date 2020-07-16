@@ -22,15 +22,11 @@ class AirQualityIndex(MycroftSkill):
 
         loc = self.location
 
-        self.lat = 48.3
-        self.lon = -122.4
+        self.lat = loc['coordinate']['latitude']
+        self.lon = loc['coordinate']['longitude']
 
     @intent_handler('index.quality.air.intent')
     def handle_index_quality_air(self, message):
-        loc = self.location
-        self.log.error(loc)
-        self.log.error(type(loc))
-        self.log.error(json.load(loc))
 
         if self.api_key is None:
             self.speak_dialog("API Key Not Set")

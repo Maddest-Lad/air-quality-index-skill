@@ -19,19 +19,15 @@ class AirQualityIndex(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
         self.api_key = self.settings.get('api_key')
-        self.lat = 0.0
-        self.lon = 0.0
 
-        self.log.debug(MycroftSkill.location)
-        self.log.debug(type(MycroftSkill.location))
-        self.log.debug(MycroftSkill.location_pretty)
-        self.log.debug(type(MycroftSkill.location_pretty))
+        loc = self.location
+        self.lat = loc['lat']
+        self.lon = loc['lon']
 
     @intent_handler('index.quality.air.intent')
     def handle_index_quality_air(self, message):
-
         query = self.get_air_quality()
-        if query is not None:
+        if query[0] is not None:
             ozone = query[0]["Category"]["Name"]
             particulates = query[1]["Category"]["Name"]
             self.speak_dialog("particulates are {0} and ozone is {1}".format(particulates, ozone))

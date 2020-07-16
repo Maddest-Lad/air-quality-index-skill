@@ -14,7 +14,7 @@ Sam Harris
 
 ## Category
 **Daily**
-Transport
+Weather
 
 ## Tags
 #Air

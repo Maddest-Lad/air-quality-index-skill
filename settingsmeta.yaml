@@ -1,7 +1,8 @@
 
 skillMetadata:
   sections:
-    - name: Request Api Key At (https://docs.airnowapi.org/account/request/)
+    - name: Api Key
+    - label: Request Key At <a href='https://aqicn.org/data-platform/token/#/'> The World Air Quality Index Project </a>
       fields:
         - name: api_key
           type: text

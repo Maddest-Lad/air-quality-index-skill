@@ -78,20 +78,20 @@ class AirQualityIndex(MycroftSkill):
         for i in daily_values.keys():
             term_dict[i] = self.air_quality_to_term(value=daily_values[i], pollutant=i)
 
-        # All Values Are The Same
-        if len(Counter(term_dict.values())) == 1:
-            self.speak_dialog("all air quality parameters are {}".format(term_dict["o3"]))
+        self.log.debug(term_dict)
 
-        else:
-            # Invert The Dictionary So That The (Good, Moderate, Unhealthy etc) Map To A List Pollutants
-            inverted_dict = dict()
-            for key, value in term_dict.items():
-                inverted_dict.setdefault(value, list()).append(key)
+        # Invert The Dictionary So That The (Good, Moderate, Unhealthy etc) Map To A List Pollutants
+        inverted_dict = dict()
+        for key, value in term_dict.items():
+            inverted_dict.setdefault(value, list()).append(key)
 
-            for i in inverted_dict.keys():
-                linking_verb = "is" if len(inverted_dict[i]) > 1 else "are"
-                self.speak_dialog(*inverted_dict[i], linking_verb, i)
-                self.log.debug(*inverted_dict[i], linking_verb, i)
+        self.log.debug(inverted_dict)
+
+        # ex Ozone [and] Fine Particulates Are Good
+        for i in inverted_dict.keys():
+            linking_verb = "is" if len(inverted_dict[i]) > 1 else "are"
+            self.speak_dialog(*inverted_dict[i], linking_verb, i)
+            self.log.debug(*inverted_dict[i], linking_verb, i)
 
     # Returns Level of Concern For A Given Pollutant Value
     @staticmethod

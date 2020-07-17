@@ -91,6 +91,7 @@ class AirQualityIndex(MycroftSkill):
             for i in inverted_dict.keys():
                 linking_verb = "is" if len(inverted_dict[i]) > 1 else "are"
                 self.speak_dialog(*inverted_dict[i], linking_verb, i)
+                self.log.debug(*inverted_dict[i], linking_verb, i)
 
     # Returns Level of Concern For A Given Pollutant Value
     @staticmethod

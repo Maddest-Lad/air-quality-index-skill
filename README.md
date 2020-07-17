@@ -2,21 +2,20 @@
 Air quality conditions and forecast
 
 ## About
-Get air quality conditions and forecasts. Uses your default location. Provides recomendations based on ozone, fine particulate matter and the uv index.
+Get air quality conditions and forecasts. Uses your default location. Provides reports on ozone, fine particulate matter and the uv index.
 
 Data comes from [The World Air Quality Index Project](https://aqicn.org/contact/)
 
 ## Examples
 * "What's the air quality today"
 * "How's the air"
-* "Will the air be safe on tuesday"
+* "Will the air be safe today"
 
 ## Credits
 Sam Harris
 
 ## Category
 **Daily**
-Weather
 
 ## Tags
 #ozone

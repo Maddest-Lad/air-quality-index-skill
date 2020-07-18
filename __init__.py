@@ -1,18 +1,18 @@
+import requests
+from dateutil.utils import today
+
 from adapt.intent import IntentBuilder
 from mycroft import MycroftSkill, intent_handler
-from dateutil.utils import today
-from collections import Counter, defaultdict
-import requests
 
 """
-    A Skill to return the daily air quality parameters 
-    TODO: figure out how to handle x days from now
+    A Skill to return the daily air quality parameters based on your latitude/longitude
+    TODO: Handle x days from now in an Intent Handler (the forecast side is ready for it rn)
 
-    This skill uses the data from the World Air Quality Project (https://aqicn.org/api/) 
+    This skill uses the data from the World Air Quality Project (WAQP) (https://aqicn.org/api/) 
     Specifically, The Geo-Localized Feed (https://aqicn.org/json-api/doc/#api-Geolocalized_Feed-GetGeolocFeed)
 """
 
-base_url = "https://api.waqi.info/feed/"
+BASE_URL = "https://api.waqi.info/feed/"
 
 
 class AirQualityIndex(MycroftSkill):
@@ -26,9 +26,9 @@ class AirQualityIndex(MycroftSkill):
         self.lat = loc['coordinate']['latitude']
         self.lon = loc['coordinate']['longitude']
 
-    # Handle: What's The Air Quality Like [Today]
+    # Handle: What's The Air Quality Like
     @intent_handler(IntentBuilder("").require("Query").one_of("Air", "Air Quality").build())
-    def handle_index_quality_air(self, message):
+    def handle_index_quality_air(self):
         self.log.debug("Handler: handle_aqi_now")
 
         data = self.get_air_quality()
@@ -39,22 +39,37 @@ class AirQualityIndex(MycroftSkill):
             daily_values = self.forecast(data, 0)
             self.simplify_and_speak(daily_values)
 
-    # Returns A Dictionary From The Api Containing Air Quality Data & A Bunch of Fluff / Attributions
     def get_air_quality(self) -> dict or None:
+        """
+            Makes a GET request to the WAQP API which should return either a jSON file or a HTTP Error Status Code
+
+            :returns
+                Dict : Returns the JSON file as a Dictionary
+                None : If A HTTP Error Occurred In the Get Request, It Logs The Error and Returns None
+        """
+
         try:
-            url = base_url + "geo:{0};{1}/?token={2}".format(self.lat, self.lon, self.api_key)
+            url = BASE_URL + "geo:{0};{1}/?token={2}".format(self.lat, self.lon, self.api_key)
 
             response = requests.get(url=url, timeout=3)
             response.raise_for_status()  # Raises and exception if anything seems wrong with response
             return response.json()
-        except Exception as error:
+        except (requests.HTTPError, requests.ConnectionError, requests.RequestException) as error:
             self.log.error(f"Data Collection Error: {error}")
             return None
 
-    # Get The Average Value For Each of The Aerial Pollutants <days_from_now> Days From Today
-    # ex : today is the 5th and <days_from_now> = 4 will return the forecast for the 9th
     @staticmethod
     def forecast(data: dict, days_from_now: int) -> dict:
+        """
+            Get The Average Value For Each of The Aerial Pollutants <days_from_now> Days From Today
+            ex : today is the 5th and <days_from_now> = 4 will return the forecast for the 9th
+
+            :param data : The JSON Dictionary From get_air_quality()
+            :param days_from_now : Used to increment which day the data is retrieved from
+
+            :returns
+                Dict : Returns a dictionary containing each pollutant mapped to it's value
+        """
 
         daily_values = {}
 
@@ -62,16 +77,22 @@ class AirQualityIndex(MycroftSkill):
         date = date[:8] + str(int(date[8:]) + days_from_now)  # Change Lookup Date
 
         for i in data.items():
-            if type(i[0]) == str:
+            if isinstance(i[0], str):
                 for j in data[i[0]]:
                     if j['day'] == date:
                         daily_values[i[0]] = j['avg']
 
         return daily_values
 
-    # Tries to simplify spoken text to minimize repetitions
-    # ie if all pollutants are of one category
     def simplify_and_speak(self, daily_values: dict) -> None:
+        """
+            Speaks The Values For Each Air Quality Parameter
+
+            :param daily_values: a dict containing each pollutant mapped to it's value - The Output of Self.forecast()
+
+            :return:
+                None :  Nothing
+        """
 
         term_dict = {}
         # Map Each Value To The Correct AQI/UVI Term
@@ -93,9 +114,19 @@ class AirQualityIndex(MycroftSkill):
             self.speak_dialog(*inverted_dict[i], linking_verb, i)
             self.log.debug(*inverted_dict[i], linking_verb, i)
 
-    # Returns Level of Concern For A Given Pollutant Value
     @staticmethod
     def air_quality_to_term(value: int, pollutant: str) -> str:
+        """
+            Returns The Level of Concern For A Given Pollutant Value
+            Note, Ozone, PM25 and PM10 all Use The First Scale, While The UV Index Uses It's Own
+
+            :param pollutant: a string containing
+            :param value: an int representing the Air Quality Index Value for <pollutant>
+
+            :return:
+                None :  Nothing
+        """
+
         # Everything but the UV index has a shared scale
         if pollutant != "uvi":
             if value < 50:

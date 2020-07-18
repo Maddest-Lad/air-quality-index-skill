@@ -1,0 +1,22 @@
+{
+    "skillMetadata": {
+        "sections": [
+            {
+                "name": "Api Key",
+                "fields": [
+                    {
+                        "type": "label",
+                        "label": "Request Key At <a href='https://aqicn.org/data-platform/token/#/'> The World Air Quality Index Project </a>"
+                    },
+                    {
+                        "name": "api_key",
+                        "type": "text",
+                        "label": "Token",
+                        "options": "Default (from Basic Settings)|default;Celsius|celsius;Fahrenheit|fahrenheit",
+                        "value": "########-####-####-####-############"
+                    }
+                ]
+            }
+        ]
+    }
+}

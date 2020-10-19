@@ -1,6 +1,4 @@
 # <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/wind.svg" card_color="#8CE0FE" width="50" height="50" style="vertical-align:bottom"/> Air Quality
-Air quality conditions and forecast
-
 ## About
 A Mycroft open source app that gets your local air quality conditions and an upcoming forecast. Provides reports on ozone, fine particulate matter and the uv index using data [The World Air Quality Index Project](https://aqicn.org/contact/)
 

@@ -2,14 +2,11 @@
 Air quality conditions and forecast
 
 ## About
-Get air quality conditions and forecasts. Uses your default location. Provides reports on ozone, fine particulate matter and the uv index.
+A Mycroft open source app that gets your local air quality conditions and an upcoming forecast. Provides reports on ozone, fine particulate matter and the uv index using data [The World Air Quality Index Project](https://aqicn.org/contact/)
 
-Data comes from [The World Air Quality Index Project](https://aqicn.org/contact/)
-
-## Examples
-* "What's the air quality today"
-* "How's the air"
-* "Will the air be safe today"
+## Example
+* What's the air quality today: Fine Particulates, UV and Ozone are Good
+* How's the air: Fine Particulates are Unhealthy, UV is Good and Ozone is Moderate 
 
 ## Credits
 Sam Harris
